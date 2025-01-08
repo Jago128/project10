@@ -1,4 +1,4 @@
-package FileStuff;
+package fileStuff;
 
 import java.io.*;
 
@@ -11,6 +11,9 @@ public class FileProject1 {
 		Persona p2=new Persona("4321","Begoña", 26);
 		ObjectOutputStream oos=null;
 		ObjectInputStream ois=null;
+		boolean end=false;
+		
+		
 		try {
 			oos=new ObjectOutputStream(new FileOutputStream(fich));
 		} catch (FileNotFoundException e) {
@@ -27,29 +30,21 @@ public class FileProject1 {
 			e.printStackTrace();
 		}
 
+		
 		try {
 			ois=new ObjectInputStream(new FileInputStream(fich));
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-			Persona read;
-			try {
-				read = (Persona)ois.readObject();
-				while (read!=null) {
+			while (!end) {
+				try {
+					Persona read=(Persona)ois.readObject();
+				
 				System.out.println(read.toString());
-				read=(Persona)ois.readObject();
+				} catch (EOFException e) {
+					end=true;
+				}
 			}
-			} catch (EOFException e1) {
-				e1.printStackTrace();
-			} catch (Exception e2) {
-				e2.printStackTrace();
-			}
-			
-		
-
-
+			ois.close();
+		} catch (Exception e) {
+			System.out.println("FATAL ERROR.");
+		}
 	}
 }
