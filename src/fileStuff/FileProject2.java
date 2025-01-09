@@ -61,7 +61,7 @@ public class FileProject2 {
 			}
 			ois.close();	 
 
-		}catch(Exception e) {
+		} catch(Exception e) {
 			System.out.println("Fatal error");
 		}
 
@@ -74,10 +74,10 @@ public class FileProject2 {
 			oos=new ObjectOutputStream(new FileOutputStream(fichAux));			
 			while (!finArchivo) {
 				try {
-					Persona aux=(Persona) ois.readObject();
+					Persona aux=(Persona)ois.readObject();
 					if (!aux.getDni().equals(dni)) {
 						oos.writeObject(aux);
-					}else {
+					} else {
 						modificado=true;
 					}
 				} catch (EOFException e) {

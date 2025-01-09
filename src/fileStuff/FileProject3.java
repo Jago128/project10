@@ -13,7 +13,7 @@ public class FileProject3 {
 		switch (menu) {
 
 		case 1:
-			
+
 			break;
 
 		case 2:
@@ -27,10 +27,6 @@ public class FileProject3 {
 		case 4:
 
 			break;
-
-		case 5:
-
-			break;
 		}
 
 	}
@@ -41,13 +37,13 @@ public class FileProject3 {
 		System.out.println("3. Modificar la edad de un animal por su ID");
 		System.out.println("4. Eliminar un animal por su ID");
 		System.out.println("5. Salir");
-		return Utilidades.leerInt("Elija una opcion:",1,5);
+		return Utilidades.leerInt("Elija una opcion:",1,4);
 	}
-	
+
 	public static void show(File file) {
 		ObjectInputStream ois=null;
 		boolean end=false;
-		
+
 		try {
 			ois=new ObjectInputStream(new FileInputStream(file));
 			while (!end) {
@@ -115,4 +111,87 @@ public class FileProject3 {
 			}
 		}
 	}
+
+	public static void modify(File file) {
+		File filePH=new File("animalesAux.dat");
+		ObjectOutputStream oos=null;
+		ObjectInputStream ois=null;
+		String id;
+		char choice;
+		int age;
+		boolean end=false, modified=false;
+		try {
+			System.out.println("Introduce el ID del animal:");
+			id=Utilidades.introducirCadena();
+			System.out.println("¿Quiere modificar o eliminar? (M/E)");
+			choice=Utilidades.leerChar('M','E');
+
+			switch (choice) {
+			case 'M':
+				ois=new ObjectInputStream(new FileInputStream(file));
+				oos=new ObjectOutputStream(new FileOutputStream(filePH));			
+				while (!end) {
+					try {
+						Animal ph=(Animal)ois.readObject();
+						if (ph.getId().equals(id)) {
+							System.out.println("Introduce la nueva edad:");
+							age=Utilidades.leerInt();
+							ph.setAge(age);
+							modified=true;
+						}
+						oos.writeObject(ph);
+					} catch (EOFException e) {
+						end=true;
+					} catch (ClassNotFoundException e) {
+						e.printStackTrace();
+					}
+				}
+				oos.close();
+				ois.close();	 
+				if (modified) {
+					System.out.println("Animal modificado");
+					if (file.delete()) {
+						filePH.renameTo(file);
+					}
+				} else {
+					System.out.println("No existe ningun animal con el ID introducido.");
+				}
+				break;
+
+		case 'E':
+			oos=new ObjectOutputStream(new FileOutputStream(file));
+			ois=new ObjectInputStream(new FileInputStream(file));
+			while (!end) {
+				try {
+					Animal ph=(Animal)ois.readObject();
+					if (!ph.getId().equals(id)) {
+						oos.writeObject(ph);
+					} else {
+						modified=true;
+					}
+				} catch (EOFException e) {
+					end=true;
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+			oos.close();
+			ois.close();	 
+			if (modified) {
+				System.out.println("El animal se ha eliminado.");
+				if (file.delete()) {
+					filePH.renameTo(file);
+				}
+			} else {
+				System.out.println("No existe ningun animal con el ID introducido.");
+			}
+			break;
+		}
+
+	} catch (FileNotFoundException e) {
+		e.printStackTrace();
+	} catch (IOException e) {
+		e.printStackTrace();
+	}
+}
 }
