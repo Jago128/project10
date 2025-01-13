@@ -5,42 +5,43 @@ import java.io.Serializable;
 public class Persona implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
+	private String name;
+	private String surN;
 	private String dni;
-	private String nom;
-	private int edad;
 	
-	public Persona(String d, String n, int e) {
-		this.dni = d;
-		this.nom = n;
-		this.edad = e;
-	}
-	
-	public String getDni() {
-		return dni;
-	}
-	
-	public void setDni(String dni) {
+	public Persona(String name, String surN, String dni) {
+		this.name = name;
+		this.surN = surN;
 		this.dni = dni;
 	}
 	
-	public String getNom() {
-		return nom;
+
+	public String getName() {
+		return name;
 	}
-	
-	public void setNom(String nom) {
-		this.nom = nom;
+
+	public void setName(String name) {
+		this.name = name;
 	}
-	
-	public int getEdad() {
-		return edad;
+
+	public String getSurN() {
+		return surN;
 	}
-	
-	public void setEdad(int edad) {
-		this.edad = edad;
+
+	public void setSurN(String surN) {
+		this.surN = surN;
 	}
-	
+
+	public String getDni() {
+		return dni;
+	}
+
+	public void setDni(String dni) {
+		this.dni = dni;
+	}
+
 	@Override
 	public String toString() {
-		return "Persona [dni=" + dni + ", nom=" + nom + ", edad=" + edad + "]";
+		return "Persona [name=" + name + ", surN=" + surN + ", dni=" + dni + "]";
 	}
 }

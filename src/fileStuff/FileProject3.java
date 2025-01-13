@@ -36,7 +36,7 @@ public class FileProject3 {
 		System.out.println("3. Modificar la edad de un animal por su ID");
 		System.out.println("4. Eliminar un animal por su ID");
 		System.out.println("5. Salir");
-		return Utilidades.leerInt("Elija una opcion:",1,4);
+		return Utilidades.leerInt("Elija una opcion:",1,5);
 	}
 
 	public static void show(File file) {

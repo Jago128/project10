@@ -7,8 +7,8 @@ public class FileProject1 {
 
 	public static void main(String[] args) {
 		File fich=new File("Personas.dat");
-		Persona p1=new Persona("1234","Leire", 25);
-		Persona p2=new Persona("4321","Begoña", 26);
+		Persona1 p1=new Persona1("1234","Leire", 25);
+		Persona1 p2=new Persona1("4321","Begoña", 26);
 		ObjectOutputStream oos=null;
 		ObjectInputStream ois=null;
 		boolean end=false;
@@ -35,7 +35,7 @@ public class FileProject1 {
 			ois=new ObjectInputStream(new FileInputStream(fich));
 			while (!end) {
 				try {
-					Persona read=(Persona)ois.readObject();
+					Persona1 read=(Persona1)ois.readObject();
 				
 				System.out.println(read.toString());
 				} catch (EOFException e) {
