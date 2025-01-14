@@ -245,7 +245,8 @@ public class FileProject5 {
 			while (!end) {
 				try {
 					Empleado e=(Empleado)ois.readObject();
-
+					
+					
 				} catch (ClassNotFoundException e) {
 					e.printStackTrace();
 				} catch (EOFException e) {
