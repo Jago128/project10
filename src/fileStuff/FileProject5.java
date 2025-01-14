@@ -27,11 +27,11 @@ public class FileProject5 {
 				break;
 
 			case 3:
-				modifyDept(emp, categ);
+				modifyDeptEmpCode(emp,categ);
 				break;
 
 			case 4:
-				
+
 				break;
 
 			case 5:
@@ -69,72 +69,75 @@ public class FileProject5 {
 		ObjectInputStream ois;
 		ObjectOutputStream oos;
 		MyObjectOutputStream moos;
-
-		System.out.println("Introduce el nombre:");
-		name=Utilidades.introducirCadena();
-		System.out.println("Introduce el apellido:");
-		surN=Utilidades.introducirCadena();
-		System.out.println("Introduce el DNI:");
-		dni=Utilidades.introducirCadena();
-		
-		System.out.println("El codigo del empleado es automaticamente generado.\n");
-		
-		System.out.println("Introduce el departamento:");
-		dept=Utilidades.introducirCadena();
-		
-		do {
-			System.out.println("Introduce el codigo de la categoria:");
-			codeC=Utilidades.leerInt();
-			try {
-				ois=new ObjectInputStream(new FileInputStream(categ));
-				try {
-					Categoria c=(Categoria)ois.readObject();
-					while (!end) {
-						if (c.getCodeC()==codeC) {
-							System.out.println("La categoria introducida es correcta.");
-							found=true;
-						}
-					}
-					ois.close();
-				} catch (ClassNotFoundException e) {
-					e.printStackTrace();
-				} catch (EOFException e) {
-					end=true;
-				}
-			} catch (FileNotFoundException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			if (!found) {
-				System.out.println("La categoria introducida es invalida. Introduzca una categora valida.");
-			}
-		} while (!found);
-		Empleado eI=new Empleado(name, surN, dni, generateCode(emp), dept, codeC);
-		
-		if (emp.exists()) {
-			try {
-				moos=new MyObjectOutputStream(new FileOutputStream(emp,true));
-				moos.writeObject(eI);
-				System.out.println("El empleado ha sido añadido al fichero.");
-				moos.close();
-			} catch (FileNotFoundException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+		if (!categ.exists()) {
+			System.out.println("No puede añadir un empleado sin tener añadidas categorias. Volviendo al menu...");
 		} else {
-			try {
-				oos=new MyObjectOutputStream(new FileOutputStream(emp));
-				oos.writeObject(eI);
-				System.out.println("El fichero ha sido creado con el empleado.");
-				oos.close();
-			} catch (FileNotFoundException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
+			System.out.println("Introduce el nombre:");
+			name=Utilidades.introducirCadena();
+			System.out.println("Introduce el apellido:");
+			surN=Utilidades.introducirCadena();
+			System.out.println("Introduce el DNI:");
+			dni=Utilidades.introducirCadena();
+
+			System.out.println("El codigo del empleado es automaticamente generado.\n");
+
+			System.out.println("Introduce el departamento:");
+			dept=Utilidades.introducirCadena();
+			do {
+				System.out.println("Introduce el codigo de la categoria:");
+				codeC=Utilidades.leerInt();
+				try {
+					ois=new ObjectInputStream(new FileInputStream(categ));
+					try {
+						Categoria c=(Categoria)ois.readObject();
+						while (!end) {
+							if (c.getCodeC()==codeC) {
+								System.out.println("La categoria introducida es correcta.");
+								found=true;
+							}
+						}
+						ois.close();
+					} catch (ClassNotFoundException e) {
+						e.printStackTrace();
+					} catch (EOFException e) {
+						end=true;
+					}
+				} catch (FileNotFoundException e) {
+					e.printStackTrace();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				if (!found) {
+					System.out.println("La categoria introducida es invalida. Introduzca una categora valida.");
+				}
+			} while (!found);
+			Empleado eI=new Empleado(name, surN, dni, generateCode(emp), dept, codeC);
+
+			if (emp.exists()) {
+				try {
+					moos=new MyObjectOutputStream(new FileOutputStream(emp,true));
+					moos.writeObject(eI);
+					System.out.println("El empleado ha sido añadido al fichero.");
+					moos.close();
+				} catch (FileNotFoundException e) {
+					e.printStackTrace();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			} else {
+				try {
+					oos=new MyObjectOutputStream(new FileOutputStream(emp));
+					oos.writeObject(eI);
+					System.out.println("El fichero ha sido creado con el empleado.");
+					oos.close();
+				} catch (FileNotFoundException e) {
+					e.printStackTrace();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 			}
 		}
+
 	}
 
 	public static void addCateg(File categ) {
@@ -185,9 +188,79 @@ public class FileProject5 {
 			}
 		}
 	}
-	
-	public static void modifyDept(File emp, File categ) {
+
+	public static void modifyDeptEmpCode(File emp, File categ) {
+		File empPH=new File("empleadoPH.dat");
 		ObjectInputStream ois;
-		MyObjectOutputStream moos;
+		ObjectOutputStream oos;
+		int code;
+		String newDept;
+		boolean found=false, end=false;
+
+		System.out.println("Introduce el codigo del empleado:");
+		code=Utilidades.leerInt();
+
+		try {
+			ois=new ObjectInputStream(new FileInputStream(emp));
+			oos=new ObjectOutputStream(new FileOutputStream(empPH));
+			while (!end||!found) {
+				try {
+					Empleado e=(Empleado)ois.readObject();
+					if (e.getCode()==code) {
+						found=true;
+						System.out.println("Introduce el nuevo departamento de la persona.");
+						newDept=Utilidades.introducirCadena();
+						e.setDept(newDept);
+					}
+					oos.writeObject(e);
+				} catch (ClassNotFoundException e) {
+					e.printStackTrace();
+				} catch (EOFException e) {
+					end=true;
+				}
+			}
+			oos.close();
+			ois.close();
+			if (!found) {
+				System.out.println("No existen empleados con el codigo introducido.");
+			} else {
+				System.out.println("El departamento ha sido correctamente modificado.");
+				if (emp.delete()) {
+					empPH.renameTo(emp);
+				}
+			}
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			System.err.println("FATAL ERROR");
+		}
+	}
+
+	public static void listDeptDesc(File emp) {
+		ObjectInputStream ois;
+		boolean end=false;
+
+		try {
+			ois=new ObjectInputStream(new FileInputStream(emp));
+			while (!end) {
+				try {
+					Empleado e=(Empleado)ois.readObject();
+
+				} catch (ClassNotFoundException e) {
+					e.printStackTrace();
+				} catch (EOFException e) {
+					end=true;
+				}
+			}
+
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public static void listCateg(File emp, File categ) {
+
 	}
 }

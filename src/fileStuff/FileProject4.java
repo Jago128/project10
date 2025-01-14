@@ -138,7 +138,6 @@ public class FileProject4 {
 
 		System.out.println("Introduce el ID del animal:");
 		String id=Utilidades.introducirCadena();
-
 		for (Animal an:a) {
 			if (an.getId().equals(id)) {
 				System.out.println("Introduce la nueva edad:");
