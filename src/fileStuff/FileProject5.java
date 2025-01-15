@@ -53,15 +53,7 @@ public class FileProject5 {
 		System.out.println("6. Salir");
 		return Utilidades.leerInt("Elija una opcion:",1,6);
 	}
-
-	public static int generateCodeC(File categ) {
-		return Utilidades.calculoFichero(categ)+1;
-	}
-
-	public static int generateCode(File emp) {
-		return Utilidades.calculoFichero(emp)+100;
-	}
-
+	
 	public static void add(File emp, File categ) {
 		String name, surN, dni, dept;
 		int codeC;
@@ -111,7 +103,7 @@ public class FileProject5 {
 					System.out.println("La categoria introducida es invalida. Introduzca una categora valida.");
 				}
 			} while (!found);
-			Empleado eI=new Empleado(name, surN, dni, generateCode(emp), dept, codeC);
+			Empleado eI=new Empleado(name, surN, dni, 100+Utilidades.calculoFichero(emp), dept, codeC);
 
 			if (emp.exists()) {
 				try {
@@ -162,8 +154,12 @@ public class FileProject5 {
 				System.out.println("El salario no puede ser negativo.");
 			}
 		} while (salary<0);
-		Categoria cI=new Categoria(generateCodeC(categ),desc,salary);
-
+		
+		Categoria cI=new Categoria(1,desc,salary);
+		if (categ.exists()) {
+			cI.setCodeC(1+Utilidades.calculoFichero(categ));
+		}
+		
 		if (categ.exists()) {
 			try {
 				moos=new MyObjectOutputStream(new FileOutputStream(categ,true));
