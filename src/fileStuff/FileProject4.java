@@ -101,7 +101,7 @@ public class FileProject4 {
 			ois=new ObjectInputStream(new FileInputStream(file));		
 			while (!end) {
 				try {
-					Animal an=(Animal) ois.readObject();
+					Animal an=(Animal)ois.readObject();
 					a.add(an);
 				} catch (EOFException e) {
 					end=true;
