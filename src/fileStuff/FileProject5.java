@@ -240,6 +240,7 @@ public class FileProject5 {
 			ois=new ObjectInputStream(new FileInputStream(emp));
 			while (!end) {
 				try {
+					@SuppressWarnings("unused")
 					Empleado e=(Empleado)ois.readObject();
 					
 					
